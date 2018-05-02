@@ -68,3 +68,6 @@ dist.zip
 .idea/dictionaries/richard.xml
 .idea/*
 .idea
+
+# Secrets and keys
+/src/server/secrets.js

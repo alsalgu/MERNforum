@@ -16,6 +16,7 @@
     "bootstrap": "^3.3.7",
     "css-loader": "^0.28.7",
     "express": "^4.15.4",
+    "mongoose": "^5.0.17",
     "nodemon": "^1.17.3",
     "npm-run-script": "0.0.4",
     "react": "^15.6.1",
