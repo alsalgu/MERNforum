@@ -5,7 +5,6 @@ const path = require('path');
 const secrets = require('./secrets.js')
 const mongoose = require('mongoose')
 
-
 const app = express();
 
 app.use(compression());
@@ -15,9 +14,19 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + './../../'))
 
 // SERVES STATIC HOMEPAGE
-// Changed path-route to a catch-all for compatibility with
+// Changed path-route for compatibility with
 // React-Router-Dom pkg
-app.get('*', (req, res, next) => {
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+// Route for API stuff
+app.get('/api', (req, res) => {
+  res.json({"message": "henlo worl"});
+});
+
+// Anyhing that's not a defined route will just lead to home for now
+app.use(function(req, res, next) {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
