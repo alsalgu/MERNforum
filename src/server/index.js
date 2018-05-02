@@ -11,6 +11,7 @@ const app = express();
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.disable('etag');
 // Allows the use of files.
 app.use(express.static(__dirname + './../../'));
 
@@ -25,6 +26,7 @@ app.route('/Register').get(function(req, res) {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 }).post(function(req, res, next) {
   Cat.create(req.body)
+  res.end("Goodbai")
 })
 
 app.route('/:id').get(function(req, res, next) {
@@ -37,11 +39,13 @@ app.route('/:id').get(function(req, res, next) {
   Cat.findByIdAndRemove({
     _id: req.params.id
   }, function(err, Cat) {
-    if (err)
-      res.send(err);
-
-    res.json({message: 'Successfully deleted'});
+    res.end();
   });
+}).put(function(req, res) {
+  Cat.findByIdAndUpdate(req.params.id, req.body, function(err, Cat) {
+    res.end();
+  });
+
 });
 
 app.route('/api/cat').get(function(req, res) {

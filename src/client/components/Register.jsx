@@ -5,19 +5,20 @@ export default class Register extends Component {
     super(props);
     this.state = {
       data: [],
-      catName: '',
-      catSex: '',
-      catColor: ''
+      catID: "2020",
+      catRename: "JHJH"
     };
 
     this.handleClick = this.handleClick.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.handlePost = this.handlePost.bind(this);
+    this.handlePut = this.handlePut.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleClick(e, id) {
     e.preventDefault();
-    const url = 'http://localhost:8000/' + id
+    let url = '/' + id
     console.log(url)
     fetch(url, {
       method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
@@ -43,13 +44,36 @@ export default class Register extends Component {
         'Content-Type': 'application/json'
       },
       method: "POST"
+    }).then(response => {
+      if (response.ok) {
+        this.fetchData();
+      }
     })
+  }
 
+  handleChange(e) {
+    this.setState({catRename: e.target.value})
+  }
+
+  handlePut(e, id, i) {
+    e.preventDefault();
+    const url = '/' + id
+    let newname = this.state.catRename
+    let reqBody = '{"name": "' + newname + '", "sex": "grill", "color": "white"}';
+    console.log(reqBody)
+    fetch(url, {
+      body: reqBody,
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      method: "PUT"
+    })
     this.fetchData();
   }
 
   fetchData() {
-    fetch('http://localhost:8000/api/cat').then((response) => response.json()).then((data) => {
+    fetch('/api/cat').then((response) => response.json()).then((data) => {
       this.setState({data});
     });
   }
@@ -59,12 +83,14 @@ export default class Register extends Component {
   }
 
   render() {
-    content = this.state.data.map(data => {
-      return (<div><form>
-        <input ref="rename" value={data.name}/>
-      </form>
+    content = this.state.data.map((data, i) => {
+      return (<div key={i}>
+        <p>{data.name}</p>
         <a href={data._id} onClick={(e) => this.handleClick(e, data._id)}>
           <button>Delete</button>
+        </a>
+        <a href={data._id} id={i} onClick={(e) => this.handlePut(e, data._id, i)}>
+          <button>Rename</button>
         </a>
       </div>);
     })
@@ -76,8 +102,12 @@ export default class Register extends Component {
           <input ref="catColor" placeholder="Grey Tabby" type="text" name="colorForm"/><br/>
           <button type="Submit">Add Cat</button>
         </form>
+        <form>
+          <input onChange={this.handleChange} placeholder="Choose a New Name" name="renameCat" type="text"/>
+        </form>
       </div>
-      <div><h1>Cat List:</h1>{content}</div>
+      <div>
+        <h1>Cat List:</h1>{content}</div>
     </div>)
   }
 }
