@@ -21,19 +21,36 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-app.route('/cat').get(function(req, res) {
+app.route('/Register').get(function(req, res) {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+}).post(function(req, res, next) {
+  Cat.create(req.body)
+})
+
+app.route('/:id').get(function(req, res, next) {
+  Cat.findOne({
+    _id: req.params.id
+  }, function(err, user) {
+    res.sendFile(path.join(__dirname, '../client/index.html'));
+  });
+}).delete(function(req, res) {
+  Cat.findByIdAndRemove({
+    _id: req.params.id
+  }, function(err, Cat) {
+    if (err)
+      res.send(err);
+
+    res.json({message: 'Successfully deleted'});
+  });
+});
+
+app.route('/api/cat').get(function(req, res) {
   Cat.find(function(err, products) {
     if (err)
       return next(err);
     res.json(products);
   });
-}).post(function(req, res, next) {
-  Cat.create(req.body, function(err, post) {
-    if (err)
-      return next(err);
-    res.json(post)
-  });
-});
+})
 
 // Anyhing that's not a defined route will just lead to home for now
 app.use(function(req, res, next) {
