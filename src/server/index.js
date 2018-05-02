@@ -2,8 +2,9 @@ const compression = require('compression');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const secrets = require('./secrets.js')
-const mongoose = require('mongoose')
+const secrets = require('./secrets.js');
+const mongoose = require('mongoose');
+const Cat = require('../models/cat.js')
 
 const app = express();
 
@@ -11,7 +12,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 // Allows the use of files.
-app.use(express.static(__dirname + './../../'))
+app.use(express.static(__dirname + './../../'));
 
 // SERVES STATIC HOMEPAGE
 // Changed path-route for compatibility with
@@ -20,9 +21,18 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-// Route for API stuff
-app.get('/api', (req, res) => {
-  res.json({"message": "henlo worl"});
+app.route('/cat').get(function(req, res) {
+  Cat.find(function(err, products) {
+    if (err)
+      return next(err);
+    res.json(products);
+  });
+}).post(function(req, res, next) {
+  Cat.create(req.body, function(err, post) {
+    if (err)
+      return next(err);
+    res.json(post)
+  });
 });
 
 // Anyhing that's not a defined route will just lead to home for now
@@ -46,7 +56,7 @@ db.on('connected', function(ref) {
   console.log('Connected to Mongo Server.');
 })
 db.on('reconnect', function(ref) {
-  console.log('Reconnected to Mongo Server')
+  console.log('Reconnected to Mongo Server');
 })
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
