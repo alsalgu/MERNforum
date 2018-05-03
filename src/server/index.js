@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const secrets = require('./secrets.js');
 const mongoose = require('mongoose');
-const Cat = require('../models/cat.js')
+const Article = require('../models/Articles.js')
 
 const app = express();
+const appPage = path.join(__dirname, '../client/index.html')
 
 app.use(compression());
 app.use(bodyParser.json());
@@ -19,40 +20,42 @@ app.use(express.static(__dirname + './../../'));
 // Changed path-route for compatibility with
 // React-Router-Dom pkg
 app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+  res.sendFile(appPage);
 });
 
-app.route('/Register').get(function(req, res) {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+// Master Article Page and where once can post
+app.route('/Articles').get(function(req, res) {
+  res.sendFile(appPage);
 }).post(function(req, res, next) {
-  Cat.create(req.body)
-  res.end("Goodbai")
+  Article.create(req.body)
+  res.end("Article Created")
 })
 
-app.route('/:id').get(function(req, res, next) {
-  Cat.findOne({
-    _id: req.params.id
-  }, function(err, user) {
-    res.sendFile(path.join(__dirname, '../client/index.html'));
-  });
+// Routes to individual Articles using the ID parameter
+app.route('/Articles/:id').get(function(req, res, next) {
+  res.sendFile(appPage)
 }).delete(function(req, res) {
-  Cat.findByIdAndRemove({
+  Article.findByIdAndRemove({
     _id: req.params.id
-  }, function(err, Cat) {
+  }, function(err, art) {
     res.end();
-  });
+  })
+})
+
+app.route('/Articles/:id/edit').get(function(req, res, next) {
+  res.sendFile(appPage)
 }).put(function(req, res) {
-  Cat.findByIdAndUpdate(req.params.id, req.body, function(err, Cat) {
+  Article.findByIdAndUpdate(req.params.id, req.body, function(err, arr) {
     res.end();
   });
+})
 
-});
-
-app.route('/api/cat').get(function(req, res) {
-  Cat.find(function(err, products) {
+// Article API
+app.get('/api/Articles', function(req, res) {
+  Article.find(function(err, arr) {
     if (err)
       return next(err);
-    res.json(products);
+    res.json(arr);
   });
 })
 
