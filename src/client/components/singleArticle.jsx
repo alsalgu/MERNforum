@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
+import {Table} from 'react-bootstrap'
 
 export default class singArt extends Component {
   constructor(props) {
@@ -39,7 +40,6 @@ export default class singArt extends Component {
   //handleUpdate{}
 
   render() {
-    const article = (<div>{this.state.title}<br/>{this.state.body}<br/>By{' '}{this.state.author}</div>)
 
     const controls = (<div>
       <Link to={`/Articles/${this.state.id}/edit`}>
@@ -47,8 +47,25 @@ export default class singArt extends Component {
       </Link>
     </div>)
 
+    const table = (<Table striped bordered condensed hover>
+      <tbody>
+        <tr>
+          <th>
+            <h1>{this.state.title}</h1>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <h4>By{' '}{this.state.author}</h4>
+          </th>
+        </tr>
+        <tr>
+          <th>{this.state.body}</th>
+        </tr>
+      </tbody>
+    </Table>)
     return (<div>
-      <div>{article}</div>
+      <div>{table}</div>
       <div>{controls}</div>
     </div>)
   }

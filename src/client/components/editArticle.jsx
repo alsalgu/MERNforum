@@ -76,9 +76,9 @@ export default class editArt extends Component {
     const article = (<div>
       <input type="text" name="title" value={this.state.title} onChange={(e) => this.handleChange(e)}/>
       <br/>
-      <input type="text" name="body" value={this.state.body} onChange={(e) => this.handleChange(e)}/>
-      <br/>
       <input type="text" name="author" value={this.state.author} onChange={(e) => this.handleChange(e)}/>
+      <br/>
+      <textarea name="body" value={this.state.body} onChange={(e) => this.handleChange(e)}></textarea>
     </div>)
     const controls = (<div>
       <Link to={`/Articles/${this.state.id}/edit`} onClick={(e) => this.handleUpdate(e)}>

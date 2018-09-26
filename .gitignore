@@ -71,3 +71,4 @@ dist.zip
 
 # Secrets and keys
 /src/server/secrets.js
+/node_modules

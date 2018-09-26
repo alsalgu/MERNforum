@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --ignore dist --exec babel-node src/server",
+    "start": "nodemon --ignore dist --exec babel-node src/server/1.js",
     "wds": "webpack-dev-server --progress"
   },
   "keywords": [],
@@ -14,12 +14,12 @@
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.1",
     "bootstrap": "^3.3.7",
-    "css-loader": "^0.28.7",
     "express": "^4.15.4",
     "mongoose": "^5.0.17",
     "nodemon": "^1.17.3",
     "npm-run-script": "0.0.4",
     "react": "^15.6.1",
+    "react-bootstrap": "^0.32.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.2.2",
     "webpack": "^3.6.0",
@@ -33,7 +33,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "css-loader": "^0.28.7",
+    "css-loader": "^0.28.11",
     "style-loader": "^0.18.2"
   }
 }

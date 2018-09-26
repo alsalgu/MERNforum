@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
+import {Component} from "react";
+import React from 'react';
+import {Table} from 'react-bootstrap';
 import {Link} from 'react-router-dom'
 
-export default class Articles extends Component {
+class Articles extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +24,7 @@ export default class Articles extends Component {
 
   // Data Fetch
   fetchData() {
-    fetch('/api/Articles').then((response) => response.json()).then((data) => {
+    fetch("/api/Articles").then((response) => response.json()).then((data) => {
       this.setState({data});
     });
   }
@@ -37,9 +39,9 @@ export default class Articles extends Component {
     e.preventDefault();
     // Pass id param to generate URL token for request
     let url = "/Articles/" + id
-    fetch(url, {'method': 'DELETE'}).then(res => {
+    fetch(url, {"method": "DELETE"}).then(res => {
       if (res.ok) {
-        console.log('baleeted')
+        console.log("baleeted")
         this.fetchData();
       }
     })
@@ -60,13 +62,13 @@ export default class Articles extends Component {
     fetch("/Articles", {
       body: JSON.stringify(reqBody),
       headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json"
       },
       method: "POST"
     }).then(response => {
       if (response.ok) {
-        console.log("Success")
+        console.log("Success");
         this.fetchData();
       }
     })
@@ -80,34 +82,52 @@ export default class Articles extends Component {
       <form>
         <input ref="postTitle" type="text" placeholder="Title"/><br/>
         <input ref="postAuthor" type="text" placeholder="Author"/><br/>
-        <textarea ref="postContent">Article Content</textarea><br/>
+        <textarea ref="postContent" placeholder="Article Content"></textarea><br/>
         <button onClick={(e) => this.handlePost(e)}>Submit</button>
       </form>
     </div>)
 
     // Article Map Array into List
     const articleList = this.state.data.map((data, i) => {
-      return (<div key={i}>
-        <Link to={`/Articles/${data._id}`}>
-          <li>{data.title}{' '}
-            by{' '}{data.author}
-            {' '}</li>
-        </Link>
-        <a href={"/Articles/" + data._id} onClick={(e) => this.handleDelete(e, data._id)}>
-          <button>Delete</button>
-        </a>
-        <Link to={`/Articles/${data._id}/edit`}>
-          <button>Edit</button>
-        </Link>
-
-      </div>)
+      return (
+        <tr key={i}>
+          <td>
+            <Link to={`/Articles/${data._id}`}>
+              <h2>{data.title}</h2>
+            </Link>
+          </td>
+          <td><h3>{data.author}</h3></td>
+          <td>
+            <a href={"/Articles/" + data._id} onClick={(e) => this.handleDelete(e, data._id)}>
+              <button>Delete</button>
+            </a><br/>
+            <Link to={`/Articles/${data._id}/edit`}>
+              <button>Edit</button>
+            </Link>
+          </td>
+        </tr>)
     })
+
+    const tabledList = (<Table striped bordered condensed hover>
+      <thead>
+        <tr>
+          <th>Article</th>
+          <th>Author</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {articleList}
+      </tbody>
+    </Table>)
 
     return (<div>
       <div>
-        <ul>{articleList}</ul>
+        {articleList}
       </div>
       <div>{postNew}</div>
     </div>)
   }
 }
+
+export default Articles
